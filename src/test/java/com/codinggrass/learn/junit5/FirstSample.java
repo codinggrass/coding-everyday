@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-
 class FirstSample {
 
     @Test
@@ -43,7 +42,7 @@ class FirstSample {
         Object element = enumeration.nextElement();
         assertEquals(properties.getProperty((String) element), "code");
 
-        assertEquals(properties.getOrDefault("date", Date.from(Instant.now()).toString()),"11-21");
+        assertEquals(properties.getOrDefault("date", Date.from(Instant.now()).toString()), "11-21");
     }
 
     private Properties getOneProperties() {
@@ -64,8 +63,9 @@ class FirstSample {
         log.info(Optional.ofNullable(oneProperties.getProperty("name")).map(String::toUpperCase).toString());
         log.info(Optional.ofNullable(oneProperties.getProperty("time")).map(String::toUpperCase).toString());
         log.info(Optional.ofNullable(oneProperties.getProperty("name")).get());
-        log.info("{}",Optional.ofNullable(oneProperties.getProperty("time")).orElse(null));
-        assertThrows(NoSuchElementException.class,()->Optional.ofNullable(oneProperties.getProperty("time")).get());;
+        log.info("{}", Optional.ofNullable(oneProperties.getProperty("time")).orElse(null));
+        assertThrows(NoSuchElementException.class, () -> Optional.ofNullable(oneProperties.getProperty("time")).get());
+        ;
     }
 
     @Test
@@ -84,10 +84,29 @@ class FirstSample {
     @Test
     void testOptionalElseGet() {
         Optional<Object> optionalBool = Optional.empty();
-        assertNotNull(optionalBool.orElseGet(()-> "A"));
+        assertNotNull(optionalBool.orElseGet(() -> "A"));
         Object a = Optional.ofNullable(null).orElse("a");
-        log.info("{} {}",a.getClass(),a);
+        log.info("{} {}", a.getClass(), a);
     }
 
+    @Test
+    void testLeftAndRightMove() {
+        int initValue = 1024;
+        // 1024/2
+        int value = initValue >> 1;
+        assertEquals(512, value);
+        // 512/2
+        assertEquals(512 / 2, value >> 1);
+        // 1024 * 4
+        assertEquals(initValue * 4, initValue << 2);
+        // 1024 /
+        log.info("{} {}", Integer.toHexString(initValue), initValue >> 10);
+    }
 
+    @Test
+    void testProcessNumber() {
+        int number = Runtime.getRuntime().availableProcessors();
+        log.info("current process number: {}", number);
+        log.info("current free memory: {} byte", Runtime.getRuntime().freeMemory());
+    }
 }
