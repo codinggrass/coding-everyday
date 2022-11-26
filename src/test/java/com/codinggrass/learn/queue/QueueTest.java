@@ -9,13 +9,12 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,6 +41,41 @@ public class QueueTest {
         ArrayList<@Nullable Object> objects = Lists.newArrayList();
         blockingQueue.drainTo(objects, 20);
         objects.stream().forEach((e) -> log.info("{}", e));
+    }
+
+    @Test
+    void testPriorityBlockingQueue() throws InterruptedException {
+        PriorityBlockingQueue priorityBlockingQueue = new PriorityBlockingQueue();
+        priorityBlockingQueue.add(10);
+        priorityBlockingQueue.add(1);
+        priorityBlockingQueue.add(2);
+        Assertions.assertEquals(1, priorityBlockingQueue.take());
+        Assertions.assertEquals(2, priorityBlockingQueue.take());
+        Assertions.assertEquals(10, priorityBlockingQueue.take());
+
+        PriorityBlockingQueue<Integer> integerPriorityBlockingQueue = new PriorityBlockingQueue<>(10, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                // 大数在前
+                return o2 - o1;
+            }
+        });
+        integerPriorityBlockingQueue.add(1);
+        integerPriorityBlockingQueue.add(2);
+        integerPriorityBlockingQueue.add(3);
+        log.info(integerPriorityBlockingQueue.toString());
+        Assertions.assertEquals(3, integerPriorityBlockingQueue.take());
+        log.info(integerPriorityBlockingQueue.toString());
+        Assertions.assertEquals(2, integerPriorityBlockingQueue.take());
+    }
+
+    private class MyCompare implements Comparator<Integer> {
+
+
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            return o1 < o2 ? -1 : o1 == o2 ? 0 : 1;
+        }
     }
 
     @Test
@@ -83,5 +117,13 @@ public class QueueTest {
         ArrayList<String> strings1 = Lists.newArrayList("1", "2", "3");
         strings1.add(String.valueOf(4));
         Assertions.assertEquals(4, strings1.size());
+    }
+
+
+    @Test
+    void testReentrantLock() {
+        ReentrantLock lock = new ReentrantLock();
+        log.info("{}", lock.getHoldCount());
+
     }
 }
