@@ -21,12 +21,21 @@ public class StreamLearnMain {
         List<String> words = extractWordsList();
         countLongWordsUseFor(words);
         countLongWordsUseStream(words);
+        countLongWordsUseParallelStream(words);
+    }
+
+    private static void countLongWordsUseParallelStream(List<String> words) {
+        long count = words.parallelStream()
+                .filter(word -> word.length() > 8)
+                .count();
+        log.info("words counts in parallel stream method {}", count);
     }
 
     private static void countLongWordsUseStream(List<String> words) {
 
         // stram.filter是保留符合条件的数据
-        long count = words.stream().filter(word -> word.length() > 8).count();
+        long count = words.stream().filter(word -> word.length() > 10).count();
+        CreatingStream.show("countLongWordsUseStream", words.stream().filter(word -> word.length() > 10));
         log.info("words counts in stream method {}", count);
     }
 
