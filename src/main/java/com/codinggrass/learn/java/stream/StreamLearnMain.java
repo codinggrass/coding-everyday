@@ -53,7 +53,7 @@ public class StreamLearnMain {
     private static List<String> extractWordsList() throws IOException {
         // 读取一本书中的所有长单词进行计数
         String contents = new String(Files.readAllBytes(
-                Paths.get("E:\\workspace\\coding-everyday\\src\\main\\resources\\bookdemo.txt")), StandardCharsets.UTF_8);
+                Paths.get("src/main/resources/bookdemo.txt")), StandardCharsets.UTF_8);
         log.info("contents book: {}", contents);
 
         //TODO 查PL做的作用
