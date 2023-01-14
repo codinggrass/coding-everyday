@@ -1,11 +1,11 @@
 package com.codinggrass.learn.java.cache.guava;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.RemovalListener;
+import com.google.common.cache.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -14,7 +14,23 @@ import java.util.concurrent.TimeUnit;
  **/
 @Slf4j
 public class LearnGuava {
-    public static void main(String[] args) throws NoSuchMethodException, InterruptedException {
+    public static void main(String[] args) throws NoSuchMethodException, InterruptedException, ExecutionException {
+        //LoadingCache创建时需要指定一个CacheLoader覆写刷新机制
+        LoadingCache<String, String> cacheLoader = CacheBuilder.newBuilder().maximumSize(2).recordStats().build(new CacheLoader<String, String>() {
+            @Override
+            public String load(String key) throws Exception {
+                log.info("begin load value from CacheLoader");
+                Thread.sleep(1000);
+                return key + "value from cache loader";
+            }
+        });
+        log.info("{}", cacheLoader.get("1"));
+        log.info("{}", cacheLoader.get("2"));
+        log.info("{}", cacheLoader.get("3"));
+        extracted();
+    }
+
+    private static void extracted() throws NoSuchMethodException, InterruptedException {
         Cache<String, String> cache = CacheBuilder.newBuilder().build();
         cache.put("hello", "Google Guava Cache");
         log.info("{}", cache.getIfPresent("hello"));
@@ -68,10 +84,58 @@ public class LearnGuava {
         log.info("{} {}", listenerCache.getIfPresent("1"), listenerCache.getIfPresent("2"));
 
 
-        Cache<String, String> maxNumberRemoveListenCache = CacheBuilder.newBuilder().maximumSize(2).removalListener(removalListener).build();
+        Cache<String, String> maxNumberRemoveListenCache = CacheBuilder.newBuilder().recordStats().maximumSize(2).removalListener(removalListener).build();
         maxNumberRemoveListenCache.put("1", "上海");
         maxNumberRemoveListenCache.put("2", "深圳");
         maxNumberRemoveListenCache.put("3", "郑州");
         maxNumberRemoveListenCache.put("4", "官洲");
+
+        //get方法有两个参数，key,Callable ,当key值找不到value时，调用Callabe线程方法获取返回值。
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                log.info("thread 1 begin");
+                try {
+                    log.info("get key value :{}",
+                            maxNumberRemoveListenCache.get("key", (Callable<String>) () -> {
+                                log.info("begin load value in thread 1");
+                                Thread.sleep(1000);
+                                return "auto load values 1";
+                            }));
+                } catch (ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
+
+        // 如果不同线程使用相同cache加载未存在的key时，多个线程中按顺序只有第一个Calleable会被执行，执行后返回值在其他线程中也可使用。
+        new Thread(() -> {
+            log.info("thread 2 begin");
+            try {
+                log.info("get key value :{}", maxNumberRemoveListenCache.get("key", () -> {
+                    log.info("begin load value in thread 2");
+                    Thread.sleep(1000);
+                    return "auto load values 2";
+                }));
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+        Thread.sleep(2000);
+
+        //TODO 查看统计信息
+        log.info("{}", maxNumberRemoveListenCache.stats());
+        maxNumberRemoveListenCache.invalidateAll();
+        log.info("{}", maxNumberRemoveListenCache.size());
+
+        maxNumberRemoveListenCache.put("1", "2");
+        log.info("{}", maxNumberRemoveListenCache.size());
+        maxNumberRemoveListenCache.put("3", "2");
+        maxNumberRemoveListenCache.put("2", "2");
+        maxNumberRemoveListenCache.cleanUp();
+        log.info("{}", maxNumberRemoveListenCache.size());
+        log.info("{}", maxNumberRemoveListenCache.getIfPresent(2));
+        log.info("{}", maxNumberRemoveListenCache.size());
     }
 }
