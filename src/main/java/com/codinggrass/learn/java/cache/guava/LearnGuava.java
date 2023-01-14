@@ -9,6 +9,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * guava的一些基本用法
+ *
  * @author hao hao
  * @date : 2023/1/13
  **/
