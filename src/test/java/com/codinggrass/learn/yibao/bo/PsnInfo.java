@@ -1,0 +1,75 @@
+package com.codinggrass.learn.yibao.bo;
+
+import lombok.Data;
+
+import java.util.List;
+
+@Data
+public class PsnInfo {
+    String psnInfoId; // null,
+    String psnNo; //  41132820000000000044386183 ,
+    String taxPsnNo; // null,
+    String psnMgtcode; //  1878991583 ,
+    String psnName; //  刘韶阳 ,
+    String alis; // null,
+    String gend; //  2 ,
+    String brdy; //  2017-08-10 00:00:00 ,
+    String strBrdy; // null,
+    String psnCertType; //  01 ,
+    String certno; //  411328201708100308 ,
+    String hsecfc; //  4094AECE394350485FCA7FD9D458BD8F7C929832CB633ACC54F67D46032F1FC9 ,
+    String tel; // null,
+    String mob; //  18637718087 ,
+    String naty; //  01 ,
+    String natRegnCode; //  CHN ,
+    String email; // null,
+    String polstas; // null,
+    String fstPatcJobDate; // null,
+    String resdNatu; //  50 ,
+    String resdLocAdmdvs; //  411328 ,
+    String hsregAddr; //  null文峰 ,
+    String resdAddrPoscode; // null,
+    String liveAdmdvs; //  411328 ,
+    String liveAddr; //  undefined文峰 ,
+    String liveAddrPoscode; // null,
+    String resdbookNo; // null,
+    String mrgStas; //  90 ,
+    String hlcon; //  1 ,
+    String memo; // null,
+    String survStas; //  1 ,
+    String mulProvMntFlag; //  0 ,
+    String admdut; // null,
+    String empStas; // null,
+    String retrType; // null,
+    String gradSchl; // null,
+    String educ; // null,
+    String proTechDutyLv; // null,
+    String natPrfsQuaLv; // null,
+    String valiFlag; //  1 ,
+    String rid; //  410000202410231018591439571992 ,
+    String crterId; //  -- ,
+    String crterName; //  居民转入 ,
+    String crteTime; //  2021-11-23 21:17:09 ,
+    String crteOptinsNo; //  -- ,
+    String opterId; //  1665369369827602755 ,
+    String opterName; //  刘付科 ,
+    String optTime; //  2024-10-23 10:18:58 ,
+    String optinsNo; //  S41132810207 ,
+    String ver; //  8.0 ,
+    String wag; // null,
+    List<String> resdLocAdmdvsList; // [
+    //  410000 ,
+    //     411300 ,
+    //     411328
+    //      ],
+    List<String> liveAdmdvsList; // [
+    //  410000 ,
+    //   411300 ,
+    //    411328
+    //    ],
+    String canJoinInsuArr; // null,
+    String insuTypeStr; // null,
+    String psnType; // null,
+    String pausInsuDate; // null,
+    String othSfInsuMsg; // null
+}
